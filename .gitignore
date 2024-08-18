@@ -1,0 +1,32 @@
+# Node modules directory
+node_modules/
+
+# Environment variable file
+.env
+
+# Temporary audio files
+audio.mp3
+audio.webm
+
+# Cookies file
+cookies.json
+
+# TypeScript build artifacts (if you are using TypeScript)
+*.tsbuildinfo
+
+# Log files
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# npm package lock file (if you are not using package-lock)
+# package-lock.json
+
+# IDE or editor specific files
+.vscode/
+.idea/
+
+# Optional: build output directory if you are building files (e.g., dist/)
+dist/
