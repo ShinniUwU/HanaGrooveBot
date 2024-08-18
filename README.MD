@@ -1,6 +1,6 @@
 # Discord Music Bot
 
-A simple Discord bot that can play audio from YouTube in a voice channel using the `discord.js` library and `ytdl-core`. This bot supports features like searching YouTube for audio tracks, playing them in a voice channel, skipping tracks, and looping.
+A simple Discord bot that can play audio from YouTube in a voice channel using the `discord.js` library and `@distube/ytdl-core`. This bot supports features like searching YouTube for audio tracks, playing them in a voice channel, skipping tracks, and looping.
 
 ## Features
 
