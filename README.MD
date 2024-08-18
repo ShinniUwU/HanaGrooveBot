@@ -51,7 +51,7 @@ A simple Discord bot that can play audio from YouTube in a voice channel using t
 
 4. **Get Cookies for YouTube**
 
-   - Install the [EditThisCookie](https://chrome.google.com/webstore/detail/editthiscookie) extension for your browser.
+   - Install the [EditThisCookie](https://chromewebstore.google.com/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg?pli=1) extension for your browser or something similar.
    - Go to YouTube and log in to your account.
    - Export the cookies and save them to a file named `cookies.json` in the project directory.
 
