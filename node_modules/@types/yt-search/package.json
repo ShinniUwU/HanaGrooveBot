@@ -1,0 +1,25 @@
+{
+    "name": "@types/yt-search",
+    "version": "2.10.3",
+    "description": "TypeScript definitions for yt-search",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/yt-search",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Lauren Yim",
+            "githubUsername": "cherryblossom000",
+            "url": "https://github.com/cherryblossom000"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/yt-search"
+    },
+    "scripts": {},
+    "dependencies": {},
+    "typesPublisherContentHash": "f4dbbb22a1cc29ce6e0c9e7531fee9d3fd12a1906e3f5734bdfdc1ca3278a4db",
+    "typeScriptVersion": "4.5"
+}
