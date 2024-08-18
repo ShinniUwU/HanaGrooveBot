@@ -20,7 +20,7 @@ A simple Discord bot that can play audio from YouTube in a voice channel using t
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/yourusername/your-repo.git
+   git clone https://github.com/ShinniUwU/HanaGrooveBot.git
    cd HanaGrooveBot
 
    ```
