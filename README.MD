@@ -32,6 +32,10 @@ A simple Discord bot that can play audio from YouTube in a voice channel using t
    ```bash
    npm install
    ```
+   or
+   ```bash
+   yarn install 
+   ```
 
 3. **Create Environment Variables**
 
