@@ -1,19 +1,19 @@
 # HanaGrooveBot
 
-A simple Discord bot that can play audio from YouTube in a voice channel using the `discord.js` library and `@distube/ytdl-core`. This bot supports features like searching YouTube for audio tracks, playing them in a voice channel, skipping tracks, and looping.
+A simple Discord bot that can play audio in a voice channel using the `discord.js` library and `discord-player`. This bot supports features like playing songs from YouTube, managing a queue, pausing and resuming tracks, and skipping songs.
 
 ## Features
 
-- Search and play audio from YouTube.
+- Play audio from YouTube and other sources.
+- Display the current song queue.
+- Pause and unpause the currently playing track.
 - Skip the currently playing track.
-- Toggle looping of the current track.
-- Handles downloading and conversion of audio files.
 
 ## Prerequisites
 
-- Node.js (v18 or later)
-- npm (v6 or later)
-- FFmpeg (for audio conversion)
+- [Bun](https://bun.sh/) (v0.1 or later)
+- Node.js (v16.9.0 or later)
+- FFmpeg (for audio processing)
 
 ## Installation
 
@@ -22,56 +22,28 @@ A simple Discord bot that can play audio from YouTube in a voice channel using t
    ```bash
    git clone https://github.com/ShinniUwU/HanaGrooveBot.git
    cd HanaGrooveBot
-
    ```
 
 2. **Install Dependencies**
 
-   Make sure you have Node.js and npm installed. Run the following command to install project dependencies:
+   Ensure you have Bun installed. Run the following command to install project dependencies:
 
    ```bash
-   npm install
-   ```
-   or
-   ```bash
-   yarn install 
+   bun install
    ```
 
 3. **Create Environment Variables**
 
-   Copy the `.env.example` file to `.env` and update it with your own values:
-
-   ```bash
-   cp .env.example .env
-   ```
-
-   Example `.env` file:
+   Create a `.env` file in the project root and add your bot token and client ID:
 
    ```env
-   DISCORD_TOKEN=your_discord_bot_token
+   BOT_TOKEN=your_discord_bot_token
    CLIENT_ID=your_discord_client_id
-   GUILD_ID=your_discord_guild_id
    ```
 
-4. **Get Cookies for YouTube**
+4. **Set Up Commands**
 
-   - Install the [EditThisCookie](https://chromewebstore.google.com/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg?pli=1) extension for your browser or something similar.
-   - Go to YouTube and log in to your account.
-   - Export the cookies and save them to a file named `cookies.json` in the project directory.
-
-5. **Create Docker Image** (Optional)
-
-   If you want to use Docker, build the Docker image with:
-
-   ```bash
-   docker build -t my-discord-bot .
-   ```
-
-   And run it with:
-
-   ```bash
-   docker run -d --name my-discord-bot my-discord-bot
-   ```
+   The bot uses slash commands. Make sure to register them in your Discord server. Commands are defined in the code and registered automatically upon starting the bot.
 
 ## Usage
 
@@ -80,20 +52,16 @@ A simple Discord bot that can play audio from YouTube in a voice channel using t
    You can start the bot locally with:
 
    ```bash
-   npm start
+   bun run src/index.ts
    ```
-
-   Or if you’re using Docker, ensure your Docker container is running as shown in the Docker setup.
 
 2. **Bot Commands**
 
-   - `/play [url_or_query]`: Search and play audio from a YouTube URL or search query.
-   - `/loop`: Toggle looping of the currently playing track.
-   - `/skip`: Skip the currently playing track.
-
-3. **Cleaning Up**
-
-   The bot will automatically clean up temporary audio files after playing. However, if you need to manually remove old files, delete `audio.mp3` and `audio.webm` from the project directory.
+   - `/play [song]`: Plays a song from YouTube based on the given query.
+   - `/queue`: Displays the current song queue.
+   - `/pause`: Pauses the currently playing song.
+   - `/unpause`: Resumes the currently paused song.
+   - `/skip`: Skips the currently playing song.
 
 ## Development
 
@@ -126,12 +94,12 @@ To make changes or contribute to the project:
 
 ## Troubleshooting
 
-- **FFmpeg Not Found**: Ensure FFmpeg is installed and accessible from your system’s PATH.
-- **403 Errors**: Make sure your `cookies.json` is correctly configured and valid.
+- **Bot Not Responding**: Ensure the bot has permission to connect and speak in the voice channel.
+- **Commands Not Working**: Check if the bot is correctly registered with your server and that it has the necessary intents.
 
 ## Disclaimer
 
-**Usage of this bot is at your own risk.** I am not responsible for any damages, loss of data, or violations of terms of service (ToS) that may occur as a result of using this bot. This bot is provided as-is, and the I don't make no guarantees regarding its functionality or compliance with any third-party services.
+**Usage of this bot is at your own risk.** I am not responsible for any damages, loss of data, or violations of terms of service (ToS) that may occur as a result of using this bot. This bot is provided as-is, and I make no guarantees regarding its functionality or compliance with any third-party services.
 
 ## License
 
