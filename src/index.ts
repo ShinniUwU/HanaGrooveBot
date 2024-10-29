@@ -1,5 +1,5 @@
 import { Client, GatewayIntentBits } from 'discord.js';
-import { Player, Track, GuildQueue } from 'discord-player';
+import { Player, Track, GuildQueue, QueueRepeatMode } from 'discord-player';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 import { CommandInteractionOptionResolver, GuildMember } from 'discord.js';
@@ -31,10 +31,13 @@ const commands = [
         .setDescription('Pauses the currently playing song'),
     new SlashCommandBuilder()
         .setName('unpause')
-        .setDescription('Unpauses the currently paused song'), // New unpause command
+        .setDescription('Unpauses the currently paused song'),
     new SlashCommandBuilder()
         .setName('skip')
         .setDescription('Skips the currently playing song'),
+    new SlashCommandBuilder()
+        .setName('loop')
+        .setDescription('Toggles looping for the current song'),
 ].map(command => command.toJSON());
 
 // REST API for registering commands
@@ -62,7 +65,12 @@ const rest = new REST({ version: '9' }).setToken(process.env.BOT_TOKEN as string
 
 // Event when a track starts playing
 player.events.on('playerStart', (queue: GuildQueue, track: Track) => {
-    (queue.metadata as any).channel.send(`Started playing **${track.cleanTitle}**!`); // Cast metadata as any
+    if (queue.tracks.size > 1) {
+        const message = `Now playing: **${track.cleanTitle}** by **${track.author}**\n` +
+                        `Duration: ${track.duration}\n` +
+                        `URL: [Listen Here](${track.url})`;
+        (queue.metadata as any).channel.send(message);
+    }
 });
 
 // Handling command interactions
@@ -91,7 +99,14 @@ client.on('interactionCreate', async (interaction) => {
                 },
             });
 
-            return interaction.followUp(`**${track.cleanTitle}** has been added to the queue!`);
+            const trackDetails = `**${track.cleanTitle}** by **${track.author}**\n` +
+                                 `Duration: ${track.duration}\n` +
+                                 `URL: [Listen Here](${track.url})`;
+
+            const queue = player.nodes.get(interaction.guildId!);
+            if (queue && queue.tracks.size > 1) {
+                return interaction.followUp(`Added to queue:\n${trackDetails}`);
+            }
         } catch (error) {
             const errorMessage = (error as Error).message || 'An unknown error occurred.';
             return interaction.followUp(`Error: ${errorMessage}`);
@@ -100,7 +115,7 @@ client.on('interactionCreate', async (interaction) => {
 
     // Handle /queue command
     else if (commandName === 'queue') {
-        const queue = player.nodes.get(interaction.guildId!); // Ensure guildId is not null
+        const queue = player.nodes.get(interaction.guildId!);
         if (!queue || queue.tracks.size === 0) {
             return interaction.reply('The queue is currently empty.');
         }
@@ -111,7 +126,7 @@ client.on('interactionCreate', async (interaction) => {
 
     // Handle /pause command
     else if (commandName === 'pause') {
-        const queue = player.nodes.get(interaction.guildId!); // Ensure guildId is not null
+        const queue = player.nodes.get(interaction.guildId!);
         if (!queue) {
             return interaction.reply('No music is currently playing.');
         }
@@ -120,7 +135,6 @@ client.on('interactionCreate', async (interaction) => {
             return interaction.reply('There is no song currently playing.');
         }
 
-        // Attempt to pause the queue
         try {
             queue.node.pause();
             return interaction.reply('Paused the current song.');
@@ -131,37 +145,63 @@ client.on('interactionCreate', async (interaction) => {
     }
 
     // Handle /unpause command
-    // Handle /unpause command
-else if (commandName === 'unpause') {
-    const queue = player.nodes.get(interaction.guildId!); // Ensure guildId is not null
-    if (!queue || !queue.node.isPaused()) { // Check if the queue node is paused
-        return interaction.reply('There is no song currently paused.');
-    }
+    else if (commandName === 'unpause') {
+        const queue = player.nodes.get(interaction.guildId!);
+        if (!queue || !queue.node.isPaused()) {
+            return interaction.reply('There is no song currently paused.');
+        }
 
-    // Attempt to unpause the queue
-    try {
-        queue.node.resume();
-        return interaction.reply('Resumed the current song.');
-    } catch (error) {
-        console.error('Error resuming the track:', error);
-        return interaction.reply('Failed to resume the track. Please try again.');
+        try {
+            queue.node.resume();
+            return interaction.reply('Resumed the current song.');
+        } catch (error) {
+            console.error('Error resuming the track:', error);
+            return interaction.reply('Failed to resume the track. Please try again.');
+        }
     }
-}
-
 
     // Handle /skip command
     else if (commandName === 'skip') {
-        const queue = player.nodes.get(interaction.guildId!); // Ensure guildId is not null
+        const queue = player.nodes.get(interaction.guildId!);
         if (!queue || !queue.isPlaying()) {
             return interaction.reply('There is no song currently playing.');
         }
 
-        const currentTrack = queue.currentTrack; // Ensure you access currentTrack correctly
+        const currentTrack = queue.currentTrack;
         if (currentTrack) {
-            queue.node.skip(); // Change to the correct skip method
+            queue.node.skip();
             return interaction.reply(`Skipped **${currentTrack.title}**.`);
         } else {
             return interaction.reply('No track is currently playing to skip.');
+        }
+    }
+
+    // Handle /loop command
+    else if (commandName === 'loop') {
+        const queue = player.nodes.get(interaction.guildId!);
+        
+        if (!queue) {
+            return interaction.reply("No music is currently playing.");
+        }
+
+        const currentMode = queue.repeatMode;
+        const currentTrack = queue.currentTrack;
+
+        if (!currentTrack) {
+            return interaction.reply("No track is currently playing to loop.");
+        }
+
+        // Toggle loop mode
+        if (currentMode === QueueRepeatMode.TRACK) {
+            // If currently looping, disable it
+            queue.setRepeatMode(QueueRepeatMode.OFF);
+            // Clear the queue while keeping the current track playing
+            queue.tracks.clear();
+            return interaction.reply("Looping has been disabled, and the queue has been cleared.");
+        } else {
+            // If not currently looping, enable it
+            queue.setRepeatMode(QueueRepeatMode.TRACK);
+            return interaction.reply("Looping has been enabled for the current song.");
         }
     }
 });
