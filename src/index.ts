@@ -4,7 +4,9 @@ import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 import { CommandInteractionOptionResolver, GuildMember } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
+import dotenv from 'dotenv'
 
+dotenv.config();
 // Initialize Discord client
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
